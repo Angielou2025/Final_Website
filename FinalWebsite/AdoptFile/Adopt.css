@@ -1,0 +1,87 @@
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+/* This is style for Logo*/
+.container_logo{
+ padding:0px 15px
+}
+
+.Logo_img{
+  border-radius: 50%;
+  height: 60px;
+  width: 60px;
+}
+
+
+.container{
+ height: 70px;
+ width: 90%;
+ background-color: #fff;
+ box-shadow: 0px 0px 10px;
+ position: fixed;
+ left: 5%;
+ display: flex;
+ justify-content:space-between;
+ align-items: center;
+ border-radius: 0px 0px 5px 5px;
+ z-index: 1;
+}
+
+nav,ul,li{
+  display: flex;
+  gap: 0px 30px;
+  list-style: none;
+  flex-wrap: wrap;
+}
+
+a{
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+a:hover{
+  color: #c77a3b;
+}
+
+.Adopt_span{
+  background-color: #CD8C5F;
+  padding: 5px 10px;
+  border-radius: 3px;
+  color: #fff;
+  transition: 0.2s ease-in-out;
+}
+
+/*Login style*/
+.container_login{
+  padding: 0px 15px;
+}
+
+.Log_span{
+  color: #fff;
+}
+.btn_login{
+  padding: 5px 20px;
+  border: none;
+  background-color: #CD8C5F;
+  border-radius: 5px;
+  color: #fff;
+}
+
+.btn_login:hover{
+   background: #a8622f;
+}
+.container_txt{
+  position: relative;
+  height: 600px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
