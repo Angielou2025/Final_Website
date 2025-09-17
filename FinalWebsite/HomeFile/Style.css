@@ -1,0 +1,479 @@
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body{
+  background-color: #fff;
+}
+
+header{
+position: relative;
+}
+
+.Bg_home{
+  background-image:url(../img/bg_image.jpg);
+  background-position: center;
+  background-size: cover;
+  height: 100vh;
+  width: 100%;
+  clip-path: polygon(100% 0, 100% 70%, 50% 100%, 0 70%, 0 0); 
+  position:relative;
+}
+
+.cover{
+  background-color:tomato;
+  background-position: center;
+  background-size: cover;
+  height: 100vh;
+  width: 100%;
+  clip-path: polygon(100% 0, 100% 70%, 50% 100%, 0 70%, 0 0); 
+  position:absolute;
+  opacity: 0.2;
+}
+
+
+/* This is style for Logo*/
+.container_logo{
+ padding:0px 15px
+}
+
+.Logo_img{
+  border-radius: 50%;
+  height: 60px;
+  width: 60px;
+}
+
+/*Nav bar style */
+.container{
+ height: 70px;
+ width: 90%;
+ background-color: #fff;
+ box-shadow: 0px 0px 10px;
+ position: fixed;
+ left: 5%;
+ display: flex;
+ justify-content:space-between;
+ align-items: center;
+ border-radius: 0px 0px 5px 5px;
+ z-index: 1;
+}
+
+nav,ul,li{
+  display: flex;
+  gap: 0px 30px;
+  list-style: none;
+  flex-wrap: wrap;
+}
+
+a{
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+a:hover{
+  color: #c77a3b;
+}
+
+.home_span{
+  background-color: #CD8C5F;
+  padding: 5px 10px;
+  border-radius: 3px;
+  color: #fff;
+  transition: 0.2s ease-in-out;
+}
+
+/*Login style*/
+.container_login{
+  padding: 0px 15px;
+}
+
+.Log_span{
+  color: #fff;
+}
+.btn_login{
+  padding: 5px 20px;
+  border: none;
+  background-color: #CD8C5F;
+  border-radius: 5px;
+  color: #fff;
+}
+
+.btn_login:hover{
+   background: #a8622f;
+}
+.container_txt{
+  position: relative;
+  height: 600px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.title{
+   color: #fff;
+   font-family: "Roboto", sans-serif;
+   font-weight: 400px;
+   font-size: 40px;
+   position: absolute;
+   width:650px;
+   display: flex;
+   text-align: center;
+   opacity: 1;
+}
+
+ .button_container{
+   position: absolute;
+   top: 400px;
+   left:41%;
+   width: 500px;
+   display: flex;
+   text-align: center;
+ }
+
+ .bt_Adopt,.bt_Rehome{
+  margin: 0px 5px;
+  padding: 5px 25px;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+ }
+
+ .bt_Adopt{
+  border: 1px solid #fff;
+  background: transparent;
+  transition: 0.2s ease-in-out  ;
+ }
+ .bt_Adopt:hover{
+  background-color: #fff;
+ }
+ 
+ .bt_Adopt:active{
+  opacity: 0.7;
+ }
+
+ .bt_Rehome{
+  background-color: #CD8C5F;
+  transition: 0.2s ease-in-out  ;
+ }
+
+ /**/
+
+ section{
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items:center;
+ }
+
+  .p_txt{
+  width: 400PX;
+  animation: appear linear;
+  animation-timeline: view(5%);
+ }
+
+ .Discription{
+  height: 500px;
+ }
+.dcpt{
+  height: 500px;
+  clip-path: polygon(0 70%, 0 24%, 100% 0, 100% 81%);
+  animation: appear  linear;
+  animation-timeline: view(20%);
+}
+
+@keyframes appear{
+  from{
+    opacity: 0.9;
+    scale: 0;
+  }
+  to{
+    opacity:1;
+    scale: 2;
+    max-height:500px ;
+    max-width: 400px;
+  }
+}
+
+.dcpt_image{
+  position:static;
+  z-index: 0;
+}
+
+.create_Container{
+  background-color:tomato;
+  background-position: center;
+  background-size: cover;
+  height: 100vh;
+  width: 100%;
+  clip-path: polygon(100% 0, 100% 70%, 50% 100%, 0 70%, 0 0); 
+  position:absolute;
+  opacity: 0.2;
+}
+
+ /*This is Our Table for creat free acount*/
+ 
+ .Create_acc_container{
+  height: 300px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-image: url(../img/Other_pets_image.jpg);
+  background-position: center;
+  background-size: cover;
+  clip-path: polygon(50% 0, 100% 50%, 100% 100%, 0 100%, 0 50%);
+ }
+
+ .cover_Creat_acc_container{
+  background-color:tomato;
+  background-position: center;
+  background-size: cover;
+  height: 100vh;
+  width: 100%;
+  clip-path: polygon(50% 0, 100% 50%, 100% 100%, 0 100%, 0 50%);
+  position:absolute;
+  opacity: 0.2;
+  z-index: 0;
+ }
+
+ .Creat_acc{
+  width:400px;
+ }
+
+ .Create_title,
+ .Create_par,
+ .Creat_par2,
+ .Rgt_btn,
+ .Register_btn{
+  z-index: 1;
+ }
+
+ .Create_title{
+  color: #fff;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 25px;
+ }
+
+ .Create_par{
+  color:#fff;
+  margin-top: 20px;
+ }
+
+ .Creat_par2{
+  color: #fff;
+ }
+.Par_cont{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width:800px;
+}
+ .Rgt_btn{
+  padding: 5px 20px;
+  border: none;
+  background-color: #CD8C5F;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+  margin-top: 10px;
+ }
+
+.Rgt_btn:hover{
+  background-color: #c77a3b;
+}
+
+ .Rgt_btn_st{
+  color: #fff;
+  font-size:15px;
+  text-decoration: none;
+ }
+ 
+ .Rgt_btn_st:hover{
+  color: #fff;
+  background-color:#c77a3b;
+ }
+
+
+ /* Container_for_information*/
+
+ .Container_for_information{
+  height: 300px;
+  width: 100%;
+  background-color: #FFF;
+  display: grid;
+  grid-template-columns: 2.5fr 50px 2fr;
+  grid-template-rows: 300px 300px 300px ;
+  place-items:center;
+ }
+
+ .info_N_Add{
+  height: 200px;
+  width: 400px;
+ }
+
+ .Image_logo{
+  border-radius: 50%;
+  height: 60px;
+  width: 60px;
+ }
+
+ .empty_box2{
+  height: 260px;
+  width: 3px;
+  background-color: #6e6767;
+ }
+
+ .PhoneNum{
+  margin-top: 20px;
+  font-size:15px;
+  color: #000;
+ }
+
+ .Address{
+  margin-top: 5px;
+  font-size:15px;
+  font-weight:200px;
+  color: #000;
+ }
+
+ .Link_address{
+  text-decoration: none;
+  color: #000;
+  font-size:13px;
+ }
+
+ .Link_address:hover{
+  color: rgb(122, 115, 115);
+  text-decoration: underline;
+ }
+
+ /*This is our container for Time Opening*/
+
+ .Time_title{
+  color: #7a7777;
+  font-size:30px;
+ }
+
+ .time{
+  color: #000;
+  font-size: 20px;
+  padding: 20px 50px;
+ }
+
+ .text1,
+ .text2{
+  padding: 5px 0px;
+ }
+
+ .Adop_txt{
+   color: #fff;
+   padding: 2px 5px;
+ }
+
+.Adop_txt:hover{
+   color: #000;
+   background-color:#fff ;
+  }
+.Rehome_txt{
+  color: #fff;
+}
+
+.How_to_help_selector{
+  border: none;
+}
+
+/* Profile Dropdown */
+.profile-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.dropdown-box {
+  display: none;
+  position: absolute;
+  top: 46px;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  width: 260px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.dropdown-header {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+.dropdown-header strong {
+  display: block;
+  font-size: 14px;
+}
+
+.dropdown-header small {
+  font-size: 12px;
+  color: #666;
+}
+
+.dropdown-box a {
+  display: block;
+  padding: 12px;
+  font-size: 14px;
+  text-decoration: none;
+  color: #333;
+  border-bottom: 1px solid #eee;
+}
+
+.dropdown-box a span {
+  display: block;
+  font-size: 12px;
+  color: #777;
+  margin-top: 4px;
+}
+
+.dropdown-box a:hover {
+  background: #f9f6f0;
+}
+
+.dropdown-box .logout {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 12px;
+  border: none;
+  background: none;
+  font-size: 14px;
+  font-weight: bold;
+  color: #e06d33;
+  cursor: pointer;
+}
+
+.dropdown-box .logout:hover {
+  background: #f9f6f0;
+}

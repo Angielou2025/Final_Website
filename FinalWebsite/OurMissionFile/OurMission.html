@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Mission</title>
+  <link rel="stylesheet" href="Ourmission.css">
+</head>
+<body>
+      <header>
+            <div class="container">
+                <!--This is container for our logo-->
+                <div class="container_logo">
+                    <img class="Logo_img" src="../img/logo.jpeg" alt="Supremo ForBabies logo" >
+                </div>      
+                  <!--Nav bar-->
+                      <nav>
+                          <ul>
+                                <li><a href="../HomeFile/Homepage.html"><span class="Home_span">Home</span></a></li>
+                                <li><a href="../OurMissionFile/OurMission.html">  <span class="Ourmission_span">Our Mission</span></a></li>
+                                <li><a href="../AdoptFile/Adopt.html">Adopt</a></li>
+                                <li><a href="../RehomeFile/Rehome.html">Rehome</a></li>
+                                <li><a href="#Help">
+                                <select class="How_to_help_selector">
+                                  <option value="User">How to Help</option>
+                                  <option value="Admin">Admin</option>
+                                  <option value="Volunteer">Volunteer</option>
+                                </select></a></li>
+                                <li><a href="#Contact">Contact</a></li>  
+                          </ul>
+                      </nav>
+
+                      <div class="container_login">
+                        <button class="btn_login"><a href="../loginFile/login.html"><span class="Log_span">Log In</span></a></button>
+                      </div>
+                </div>
+              <!--This is Our Container Mission-->
+                <div class="container_Mission" >
+                  <div class="discription">
+                        <h1 class="ds_title">Compassionate Care <br>for Animals</h1>
+                        <p class="ds_par">Our mission to provide a safe haven for stray animanls,ensuring they receive the medical attention,love, and forever homes they deserv. </p>
+                  </div>
+                  <div class="images_dor_DC_Container">
+                     <div id="img" class="img1"><img class="Image1" src="../img/Feed1_pic.jpg" alt="image pets"></div>
+                     <div id="img" class="img2"><img class="Image2" src="../img/Feed_pic.jpg" alt="image pets"></div>
+                     <div id="img" class="img3"><img class="Image3" src="../img/Feed2.jpg" alt="image pets"></div>
+                  </div>
+                </div>
+      </header>
+      <section>
+              <div class="container_responding">
+                <div class="image_rp">
+                  <img class="Image_rp1" src="../img/bg_image.jpg" alt="" height="400px" width="400px">
+                  <div class="empty_box"></div>
+                </div>
+               <div class="discription_responding">
+                 <h1 class="ds_title_pr">Compassionate Care <br>for Animals</h1>
+                <p class="ds_rp_par">We are dedicated to responding to urgent situations, saving pets from neglect, abuse, and abandonment, and ensuring they receive the medical attention and love they require. Through our rescue efforts, we strive to make a meaningful impact on the lives of animals, giving them a second chance for a brighter future.</p>
+               </div>
+              </div>
+      </section>
+      <!--This is Our Table for creat free acount-->
+      <footer>
+             <div class="container_for_creat_acc">
+                  <div class="Create_acc_container">
+                       <div class="Creat_acc">
+                        <h1 class="Create_title">Creat Your Free Account Now</h1>
+                        <p class="Create_par">Helping pets find loving homes before they enter shelter system is the best way to make a difference Rehomong a dog or cat provides a more caring and personalized adoption experience.</p>
+                  </div>
+                       <div class="Register_btn">
+                        <button class="Rgt_btn"><a class="Rgt_btn_st" href="../loginFile/register.html">Register</a></button>
+                       </div>
+                  </div>
+                  <div class="Container_for_information">
+                      <div class="info_N_Add">
+                        <img class="Image_logo" src="../img/logo.jpeg" alt="Logo Image">
+                        <h3 class="PhoneNum">Phone Number : 09954274925</h3>
+                        <p class="Address"><b>Address :</b><a class="Link_address" href="https://www.google.com/maps/@14.6621572,120.9724677,3a,75y,90t/data=!3m7!1e1!3m5!1sVeALMwejtjVc-NsW3DjbIw!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0%26panoid%3DVeALMwejtjVc-NsW3DjbIw%26yaw%3D0!7i16384!8i8192?entry=ttu&g_ep=EgoyMDI1MDgyNS4wIKXMDSoASAFQAw%3D%3D">11 pacencia st Tugatog Malabon City</a></p>
+                      </div>
+
+                      <div class="empty_box2"></div>
+
+                      <div class="time_oppening_container">
+                           <h4 class="Time_title">Opening Hours</h4>
+                           <div class="time">
+                            <h6 class="text1">10:00 AM - 4:00 PM</h6>
+                            <h6 class="text2">Monday - Saturday</h6>
+                           </div>
+                      </div>
+                  </div>
+             </div>
+      </footer>
+      <script>
+  function logout() {
+    localStorage.removeItem("loggedUser");
+    localStorage.removeItem("loggedRole");
+    window.location.href = "../HomeFile/Homepage.html";
+  }
+
+   const loggedUser = localStorage.getItem("loggedUser");
+  const loggedRole = localStorage.getItem("loggedRole");
+
+  if (loggedUser) {
+    // Palitan ang Login button ng Profile
+    const loginContainer = document.querySelector(".container_login");
+    loginContainer.innerHTML = `
+       <div class="profile-menu">
+    <div class="profile-icon">👤</div>
+    <div class="dropdown-box" id="dropdownBox">
+      <div class="dropdown-header">
+        <strong>Jzro Xiccro</strong>
+        <small>jzroxiccro@gmail.com</small>
+      </div>
+      <a href="#" id="profileSettings">
+        Profile Settings
+        <span>Update your profile and account settings</span>
+      </a>
+     <button class="logout" id="logoutBtn" onclick="logout()">${loggedRole} Logout</button>
+    </div>
+  </div>
+    `;
+  }
+
+  function logout() {
+    localStorage.removeItem("loggedUser");
+    localStorage.removeItem("loggedRole");
+    window.location.href = "../HomeFile/Homepage.html";
+  }
+
+   const profileIcon = document.querySelector('.profile-icon');
+    const dropdownBox = document.getElementById('dropdownBox');
+    const profileView = document.getElementById('profileView');
+    const editForm = document.getElementById('editForm');
+    const profileSettings = document.getElementById('profileSettings');
+    const saveBtn = document.getElementById('saveBtn');
+    const savePopup = document.getElementById('savePopup');
+    const closeSavePopup = document.getElementById('closeSavePopup');
+
+    const logoutBtn = document.getElementById('logoutBtn');
+    const logoutPopup = document.getElementById('logoutPopup');
+    const confirmLogout = document.getElementById('confirmLogout');
+    const cancelLogout = document.getElementById('cancelLogout');
+
+    // Dropdown toggle
+    profileIcon.addEventListener('click', () => {
+      dropdownBox.style.display = dropdownBox.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Profile Settings → Show Edit Form
+    profileSettings.addEventListener('click', (e) => {
+      e.preventDefault();
+      dropdownBox.style.display = 'none';
+      profileView.style.display = 'none';
+      editForm.style.display = 'block';
+    });
+
+    // Save Button → Show Save Confirmation Popup
+    saveBtn.addEventListener('click', () => {
+      savePopup.style.display = 'flex';
+    });
+
+    closeSavePopup.addEventListener('click', () => {
+      savePopup.style.display = 'none';
+      editForm.style.display = 'none';
+      profileView.style.display = 'block'; // balik sa view mode
+    });
+
+    // Logout popup
+    logoutBtn.addEventListener('click', () => {
+      dropdownBox.style.display = 'none';
+      logoutPopup.style.display = 'flex';
+    });
+
+    cancelLogout.addEventListener('click', () => {
+      logoutPopup.style.display = 'none';
+    });
+
+    confirmLogout.addEventListener('click', () => {
+      window.location.href = "login.html"; //connect sa login
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.profile-menu')) {
+        dropdownBox.style.display = 'none';
+      }
+    });
+</script>
+
+</body>
+</html>
