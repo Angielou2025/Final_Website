@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Donation Receipt</title>
+  <style>
+    body {
+      font-family: "Courier New", monospace;
+      background: #f3f0eb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .receipt {
+      background: white;
+      width: 350px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+      border-radius: 8px;
+    }
+    .receipt-header {
+      text-align: center;
+      border-bottom: 1px dashed #999;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+    }
+    .receipt-header h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+    .receipt-body p {
+      margin: 4px 0;
+      font-size: 14px;
+    }
+    .amount {
+      font-size: 18px;
+      font-weight: bold;
+      text-align: right;
+      margin-top: 10px;
+      border-top: 1px dashed #999;
+      padding-top: 5px;
+    }
+    .receipt-footer {
+      text-align: center;
+      font-size: 12px;
+      color: #555;
+      margin-top: 15px;
+      border-top: 1px dashed #999;
+      padding-top: 5px;
+    }
+    .btn-container {
+      text-align: center;
+      margin-top: 15px;
+    }
+    .btn {
+      display: inline-block;
+      margin: 5px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      cursor: pointer;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+    .btn:hover {
+      background: #45a049;
+    }
+    .btn-back {
+      background: #007BFF;
+    }
+    .btn-back:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="receipt" id="receipt">
+    <div class="receipt-header">
+      <h2>🐾 Animal Shelter</h2>
+      <p>Official Donation Receipt</p>
+    </div>
+
+    <div class="receipt-body">
+      <p><b>Donor:</b> <?= htmlspecialchars($donation['first_name'] . ' ' . $donation['last_name']) ?></p>
+      <p><b>Email:</b> <?= htmlspecialchars($donation['email']) ?></p>
+      <p><b>Mobile:</b> <?= htmlspecialchars($donation['mobile']) ?></p>
+      <p><b>Date:</b> <?= htmlspecialchars($donation['donated_at']) ?></p>
+      <p class="amount">₱<?= number_format($donation['amount'], 2) ?></p>
+    </div>
+
+    <div class="receipt-footer">
+      ✅ Thank you for supporting our cause!<br>
+      This serves as an official proof of donation.
+    </div>
+
+    <div class="btn-container">
+      <button class="btn" onclick="window.print()">🖨 Print Receipt</button>
+      <a href="donation2.php" class="btn btn-back">⬅ Back to Donate</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rehome Application Form</title>
+  <link rel="stylesheet" href="caretaking.css">
+</head>
+<body>
+  <a href="index.html" class="back-button">←</a>
+  <div class="form-container">
+    <div id="thankYouMessage">
+      <h3>Thank you for submitting your application!</h3>
+      <p>Your request has been received, and we will contact you soon for updates. Please wait for further information.</p>
+    </div>
+
+    <form id="adoptionForm">
+      <h2>Caretaking Application Form</h2>
+
+      <h3>PET INFORMATION</h3>
+      <div class="form-group0">
+        <div class="form-field full-width0">
+            <label>When are you typically looking to volunteer? Check all that apply</label>
+        </div>
+    </div>
+
+      <div class="checkbox-group">
+        <label class="checkbox-item">
+        <input type="checkbox" name="availability" value="Weekdays" />CAT
+        </label>
+        <label class="checkbox-item">
+        <input type="checkbox" name="availability" value="Evenings" />DOG
+        </label>
+      </div>
+
+
+<div class="form-group">
+  <div class="form-field">
+    <label for="birthday">Breed <span class="asterisk">*</span></label>
+    <input type="text" name="breed" required>
+  </div>
+  <div class="form-field">
+    <label for="age">Age <span class="asterisk">*</span></label>
+    <input type="number" id="age" name="age"  required>
+  </div>
+  <div class="form-field">
+    <label for="sex">Gender <span class="asterisk">*</span></label>
+    <select id="sex" name="sex" required>
+      <option value="" disabled selected></option>
+      <option>Male</option>
+      <option>Female</option>
+      <option>Other</option>
+    </select>
+  </div>
+</div>
+      <div class="form-group">
+        <label for="age">Is your pet vaccinated? <span class="asterisk">*</span></label>
+        <input type="text" name="vaccinated" required>
+      </div>
+
+      <div class="form-group">
+        <label for="age">How long have you had this pet? <span class="asterisk">*</span></label>
+        <input type="text" name="days" required>
+      </div>
+
+      <div class="form-row-single">
+          <label for="age">Does your pet have any health issues or special needs?<span class="asterisk">*</span></label>
+          <textarea id="communityService"></textarea>
+      </div>
+      <div class="form-row-single">
+          <label for="age">Why do you need to take care your pet at a shelter?<span class="asterisk">*</span></label>
+          <textarea id="communityService"></textarea>
+      </div>
+      <div class="form-row-single">
+          <label for="age">How long are you able to keep your pet/s while we help find a suitable new 
+            home?<span class="asterisk">*</span></label>
+          <textarea id="communityService"></textarea>
+      </div>
+<p style="text-align:center; border-bottom:1px solid #ccc; line-height:0.2em; margin:50px 0;">
+  <span style="background:#fff; padding:0 10px;"> OWNER INFORMATION </span>
+</p>
+      <div class="form-group">
+        <label for="age">Name<span class="asterisk">*</span></label>
+        <input type="text" name="firstName" placeholder="First name" required>
+        <input type="text" name="lastName" placeholder="Last name" required>
+      </div>
+
+      <div class="form-group2">
+        <label>Email *</label>
+        <label>Mobile Number</label>
+        <input type="email" name="email" required>
+        <input type="text" name="mobileNumber" required>
+      </div>
+
+<div class="form-group">
+  <div class="form-field">
+    <label for="sex">Sex <span class="asterisk">*</span></label>
+    <select id="sex" name="sex" required>
+      <option value="" disabled selected>Sex</option>
+      <option>Male</option>
+      <option>Female</option>
+      <option>Other</option>
+    </select>
+  </div>
+  <div class="form-field">
+    <label for="age">Age <span class="asterisk">*</span></label>
+    <input type="number" id="age" name="age" min="0"  required>
+  </div>
+</div>
+
+      <div class="form-group">
+        <label>Address <span class="asterisk">*</span></label>
+        <input type="text" name="streetAddress" required>
+      </div>
+      <div class="form-group">
+        <label>Street Address <span class="asterisk">*</span></label>
+        <input type="text" name="streetAddress" required>
+      </div>
+      <div class="form-group1">
+        <label>City</label>
+        <label>Province / Region</label>
+        <input type="text" name="streetAddress" required>
+        <input type="text" name="province" required>
+      </div>
+
+
+      <button type="submit" class="submit-btn">Submit</button>
+    </form>
+
+    <div id="submittedData"></div>
+  </div>
+
+<script src="script-rehome.js"></script>
+</body>
+</html>

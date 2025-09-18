@@ -1,0 +1,2351 @@
+<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Dashboard</title>
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <style>
+        body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f7f6;
+      color: #2f2f2f;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background-color: #e8e1d9;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 1000;
+    }
+
+    #sidebarToggle {
+      font-size: 24px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: #2f2f2f;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo img {
+      height: 30px;
+      width: 30px;
+      border-radius: 50%;
+    }
+
+    .title {
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .profile {
+      display: flex;
+      margin-right: 50px;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .profile img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+    }
+
+    .sidebar {
+      width: 230px;
+      height: calc(100vh - 60px);
+      background-color: #e8e1d9;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      padding-top: 30px;
+      box-sizing: border-box;
+      border-right: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+      transition: width 0.3s ease;
+    }
+
+    .sidebar.collapsed {
+      width: 0;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      flex-grow: 1;
+    }
+
+    .sidebar ul li {
+      padding: 15px 20px;
+      cursor: pointer;
+      transition: 0.2s;
+      white-space: nowrap;
+    }
+
+    .sidebar ul li:hover {
+      background-color: #cd8c5f;
+      color: #ffffff;
+    }
+
+    .sidebar ul li.active {
+      background-color: #cd8c5f;
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    .submenu {
+      display: none;
+      padding-left: 20px;
+    }
+
+    .submenu li {
+      padding: 10px 20px;
+      font-size: 14px;
+      margin-left: 40px;
+    }
+
+    .logout-btn {
+      margin-top: auto;
+      padding: 15px 20px;
+      border: none;
+      background: none;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .logout-btn:hover {
+      background-color: #cd8c5f;
+      color: #fff;
+    }
+
+    .main {
+      margin-left: 230px;
+      padding: 30px;
+      padding-top: 90px;
+      transition: margin-left 0.3s ease;
+    }
+
+    .main.collapsed {
+      margin-left: 0;
+    }
+
+    .search-box {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-box input {
+      background-color: #e8e1d9;
+      padding: 10px 15px;
+      width: 100%;
+      max-width: 300px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      outline: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: #ffffff;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #e8e1d9;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f7f6;
+    }
+
+    .edit-btn {
+      background-color: #cd8c5f;
+      border: none;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .edit-btn:hover {
+      background-color: #b8734d;
+    }
+
+    /* Rehome*/
+    .approval-select {
+      padding: 6px 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      background-color: #cd8c5f;
+      color: white; 
+      cursor: pointer;
+      width: 120px; 
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    .approval-select:focus {
+      border-color: #cd8c5f;
+      outline: none;
+    }
+
+    .status-pending {
+      background: #cd8c5f;
+      color: #fff;
+    }
+
+    .status-approved {
+      background: #4caf50;
+      color: #fff;
+    }
+
+    .status-rejected {
+      background: #f44336;
+      color: #fff;
+    }
+    #rehomingTable td:nth-child(5), #rehomingTable th:nth-child(5) {
+      width: 120px;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .rehome-link {
+      color: #cd8c5f;
+    }
+
+    .rehome-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Volunteer Management */
+    #volunteerMgmt table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      table-layout: fixed;
+    }
+
+    #volunteerMgmt th, #volunteerMgmt td {
+      padding: 12px;
+      text-align: center;
+      word-wrap: break-word;
+      text-overflow: ellipsis;
+    }
+
+    #volunteerMgmt td select {
+      width: 100%; 
+      padding: 6px 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      background-color: #cd8c5f;
+      cursor: pointer;
+      width: 150px;
+      color: white;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    .approval-select:focus {
+      border-color: #cd8c5f;
+      outline: none;
+    }
+
+    .volunteer-link {
+      color: #cd8c5f;
+    }
+
+    .volunteer-link:hover {
+      text-decoration: underline;
+    }
+    
+    #awaitingVolunteers td input[type="text"] {
+      padding: 6px 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      width: 100%; 
+      color: black;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    #awaitingVolunteers td {
+      text-align: center;
+    }
+
+    #awaitingVolunteers td input {
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 10px;
+      color: #444;
+    }
+
+    .search-container {
+      margin-bottom: 20px;
+    }
+
+    .search-container input {
+      padding: 10px;
+      width: 250px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #e9dfd4;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+      background-color: white;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 15px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f1ebe5;
+      font-weight: 600;
+    }
+
+    td {
+      background-color: #fff;
+    }
+
+    .status-confirmed {
+      background-color: #c47942;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 5px;
+      display: inline-block;
+      font-size: 14px;
+    }
+
+    .status-working {
+      background-color: #e0a96d;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 5px;
+      display: inline-block;
+      font-size: 14px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 40px;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    /* Modal styles */
+        .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.4);
+      padding-top: 80px;
+    }
+
+    .modal-content {
+      background: #fff;
+      margin: auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .btn-cancel {
+      background: #ccc;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn-confirm {
+      background: #cd8c5f;
+      border: none;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #homePage {
+      display: block;              
+      text-align: center;
+      padding: 50px 20px;
+    }
+    #homePage h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+        /* Main Content */
+    .eval .main {
+      margin-left: 240px;
+      padding: 30px;
+      padding-top: 90px;
+      transition: margin-left 0.3s ease;
+      min-height: 100vh;
+      background-color: #f9f7f6;
+    }
+
+    .eval .main.collapsed {
+      margin-left: 0;
+    }
+
+    /* Performance Evaluation Section */
+    #performanceEvaluation {
+      max-width: 900px;
+      margin: 0 auto 30px;
+      background: white;
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      color: #2f2f2f;
+      overflow-x: auto;
+    }
+
+    #performanceEvaluation h2,
+    #performanceEvaluation h3 {
+      color: #444;
+    }
+
+    label {
+      font-weight: bold;
+      margin: 12px 0 6px;
+      display: block;
+    }
+
+    select, input[type="text"], input[type="date"], textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 1rem;
+      color: #2f2f2f;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      background: white;
+      min-width: 700px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    th {
+      background-color: #cd8c5f;
+      color: white;
+      font-weight: 600;
+    }
+
+    td:first-child {
+      text-align: left;
+    }
+
+    input[type="radio"] {
+      cursor: pointer;
+    }
+
+    input[type="radio"]:focus + label {
+      outline: 2px solid #cd8c5f;
+      outline-offset: 2px;
+    }
+
+    .action-buttons {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .action-buttons button {
+      background-color: #cd8c5f;
+      border: none;
+      color: white;
+      padding: 10px 16px;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .action-buttons button:hover {
+      background-color: #b8734d;
+    }
+
+    #cancel {
+      background-color: #6c757d;
+    }
+
+    #cancel:hover {
+      background-color: #495057;
+    }
+
+    /* Horizontal star rating */
+    .star-rating {
+      display: flex;
+      flex-direction: row-reverse;
+      gap: 8px;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .star-rating input[type="radio"] {
+      display: none;
+    }
+
+    .star-rating label {
+      color: #ccc;
+      cursor: pointer;
+      transition: color 0.2s;
+      user-select: none;
+      line-height: 1;
+    }
+
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+      color: #cd8c5f;
+    }
+
+    .star-rating input[type="radio"]:checked ~ label,
+    .star-rating input[type="radio"]:checked + label {
+      color: #cd8c5f;
+    }
+
+/* Evaluation History Section */
+#evaluationHistory {
+  max-width: 900px;
+  margin: 0 auto 30px;
+  background: white;
+  padding: 20px;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  color: #2f2f2f;
+  overflow-x: auto;
+}
+
+#evaluationHistory h2 {
+  color: #444;
+}
+
+.view-details-btn {
+  background-color: #cd8c5f;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.view-details-btn:hover {
+  background-color: #b8734d;
+}
+
+/* Evaluation Modal Styles */
+#evaluationModal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 50px;
+  z-index: 1000;
+}
+
+#evaluationModal .modal-box {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+#evaluationModal .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+#modalContent ul {
+  padding-left: 20px;
+}
+
+#modalContent li {
+  margin-bottom: 8px;
+}
+
+
+
+
+    /* Medical Condition Cards */
+    .medical-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .medical-card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      width: calc(50% - 10px);
+      min-width: 300px;
+    }
+
+    .medical-card h3 {
+      margin-top: 0;
+      color: #cd8c5f;
+    }
+
+    .medical-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .medical-card li {
+      margin-bottom: 10px;
+    }
+
+    .medical-card strong {
+      color: #333;
+    }
+
+    /* Tabs */
+    .tab-container {
+      display: flex;
+      margin-bottom: 20px;
+    }
+
+    .tab-button {
+      padding: 10px 20px;
+      background-color: #e8e1d9;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px 5px 0 0;
+    }
+
+    .tab-button.active {
+      background-color: #cd8c5f;
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 20px;
+      background-color: white;
+      border-radius: 0 5px 5px 5px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Homepage Cards */
+    .homepage-cards {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .summary-card {
+      flex: 1;
+      min-width: 200px;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .summary-card h3 {
+      margin: 0 0 10px;
+      color: #cd8c5f;
+      font-size: 18px;
+    }
+
+    .summary-card p {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 700;
+      color: #2f2f2f;
+    }
+
+    .section{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+  <body>
+
+    <!-- Top Navbar -->
+    <div class="top-navbar">
+      <button id="sidebarToggle">☰</button>
+      <div class="logo">
+        <img src="../img/logo.jpeg" alt="logo" />
+        <div class="title">Supremo Furbabies</div>
+      </div>
+      <div class="profile">
+        <span>Admin</span>
+        <img src="../img/profile.png" alt="admin" />
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <ul>
+        <li data-section="userMgmt">User Management</li>
+        <li id="animalMgmt">Animal Profile Management</li>
+        <ul class="submenu" id="animalSubmenu">
+          <li data-section="petInfo">Pet Information</li>
+          <li data-section="rescueHistory">Rescue History</li>
+          <li data-section="medicalCondition">Medical Condition</li>
+        </ul>
+        <li id="rehomingMgmt">Rehoming Management</li>
+        <ul class="submenu" id="rehomingSubmenu">
+          <li data-section="rehomingApplications">Rehoming Applications</li>
+          <li data-section="caketaking">Caretaking</li>
+        </ul>
+      </li>
+        <li id="volunteerMgmtMain">Volunteer Management</li>
+        <ul class="submenu" id="volunteerSubmenu">
+          <li data-section="volunteerApproval">Volunteer Approval</li>
+          <li data-section="volunteerActivities">Activities</li>
+          <li data-section="performanceEvaluation">Performance Evaluation</li>
+        </ul>
+          <li data-section="donationMgmt">Donation Management</li>
+      </ul>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main" id="mainContent">
+
+      <!-- ===== NEW HOMEPAGE SECTION ===== -->
+      <div id="homePage" class="section" style="display:block;">
+        <h1>Welcome to Supremo Furbabies Admin Dashboard</h1>
+        <div class="homepage-cards">
+          <div class="summary-card">
+            <h3>Total Users</h3>
+            <p id="totalUsers">7</p>
+          </div>
+          <div class="summary-card">
+            <h3>Total Pets</h3>
+            <p id="totalPets">2</p>
+          </div>
+          <div class="summary-card">
+            <h3>Total Donations</h3>
+            <p id="totalDonations">₱ 50,000</p>
+          </div>
+          <div class="summary-card">
+            <h3>Total Volunteers</h3>
+            <p id="totalVolunteers">3</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users -->
+      <div id="userMgmt" class="section" style="display:none;">
+        <h2>View All Users</h2>
+        <div class="search-box">
+          <input type="text" id="userSearchInput" placeholder="Search Name..." onkeyup="searchUsers()" />
+        </div>
+        <table id="userTable">
+          <thead>
+            <tr>
+              <th>Name</th><th>Email</th><th>Role</th><th>Date Joined</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Ana Santos</td><td>ana@email.com</td><td>User</td><td>2025-08-01</td>
+              <td><button class="edit-btn" onclick="editUser(this)">Edit</button></td>
+            </tr>
+            <tr>
+              <td>Juan Dela Cruz</td><td>juan@email.com</td><td>Volunteer</td><td>2025-08-15</td>
+              <td><button class="edit-btn" onclick="editUser(this)">Edit</button></td>
+            </tr>
+            <tr>
+              <td>Jiro Santos</td><td>Kingjiro@email.com</td><td>User</td><td>2025-03-02</td>
+              <td><button class="edit-btn" onclick="editUser(this)">Edit</button></td>
+            </tr>
+            <tr>
+              <td>Kent Villanueva</td><td>Kent@email.com</td><td>User</td><td>2025-04-02</td>
+              <td><button class="edit-btn" onclick="editUser(this)">Edit</button></td>
+            </tr>
+            <td>Alan Abuena</td><td>Alanabuena@email.com</td><td>Volunteer</td><td>2025-04-09</td>
+              <td><button class="edit-btn" onclick="editUser(this)">Edit</button></td>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pet Info -->
+      <div id="petInfo" class="section" style="display:none;">
+        <h2>Update Pet Information</h2>
+        <div class="search-box">
+          <input type="text" id="petInfoSearch" placeholder="Search Name..." onkeyup="searchPetInfo()" />
+        </div>
+        <table id="petInfoTable">
+          <thead>
+            <tr>
+              <th>Pet ID</th><th>Pet's Name</th><th>Species</th><th>Breed</th><th>Gender</th><th>Age</th><th>Current Status</th><th>Intake Date</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>P001</td><td>Maru</td><td>Dog</td><td>Aspin</td><td>M</td><td>2 years old</td><td>Available for adopt</td><td>April 4, 2025</td>
+              <td><button class="edit-btn" onclick="editPet(this)">Edit</button></td>
+            </tr>
+            <tr>
+              <td>P002</td><td>Ashcole</td><td>Cat</td><td>Puspin</td><td>F</td><td>3 years old</td><td>Caretaking</td><td>March 15, 2024</td>
+              <td><button class="edit-btn" onclick="editPet(this)">Edit</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Rescue History -->
+      <div id="rescueHistory" class="section" style="display:none;">
+        <h2>Rescue History</h2>
+        <div class="search-box">
+          <input type="text" id="rescueSearch" placeholder="Search Name..." onkeyup="searchRescueHistory()" />
+        </div>
+        <table id="rescueTable">
+          <thead>
+            <tr>
+              <th>Pet ID</th><th>Pet's Name</th><th>Rescuer / Reported By</th><th>Date Encoded</th><th>Species</th><th>Breed</th><th>Gender</th>
+              <th>Age</th><th>Rescue date</th><th>Location of Rescue</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>P001</td><td>Maru</td><td>Juan Dela Cruz</td><td>2025-04-05</td><td>Dog</td><td>Aspin</td><td>M</td>
+              <td>8 months old</td><td>April 4, 2025</td><td>Bagong Barrio, Caloocan City</td>
+              <td>
+                <button class="edit-btn" onclick="editRescue(this)">Edit</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    
+
+      <!-- Medical Condition -->
+      <div id="medicalCondition" class="section" style="display:none;">
+        <h2>Medical Condition Tracking</h2>
+        <div class="search-box">
+          <input type="text" placeholder="Search Name..." onkeyup="searchMedicalCondition()" />
+        </div>
+        <div class="medical-cards">
+          <div class="medical-card">
+            <h3>Maru (Dog)</h3>
+            <ul>
+              <li><strong>Overall Health Status:</strong> Healthy</li>
+              <li><strong>Vaccination Records:</strong> Rabies (Up to date), 5-in-1 (Completed), Deworming (Monthly), Tick & Flea Treatment (Ongoing)</li>
+              <li><strong>Medical History / Notes:</strong> Previous illness: None. Current condition: None. Ongoing medication: None</li>
+              <li><strong>Spay/Neuter Status:</strong> Yes</li>
+              <li><strong>Special Care Needs:</strong> None</li>
+          <li><strong>Next Scheduled Check-up:</strong> October 15, 2025</li>
+        </ul>
+        <button class="edit-btn" onclick="editMedicalCondition(this)">Edit</button>
+      </div>
+      <div class="medical-card">
+        <h3>Ashcole (Cat)</h3>
+        <ul>
+          <li><strong>Overall Health Status:</strong> Under Treatment</li>
+          <li><strong>Vaccination Records:</strong> Rabies (Up to date), 4-in-1 (Completed), Deworming (Monthly), Tick & Flea Treatment (Ongoing)</li>
+          <li><strong>Medical History / Notes:</strong> Previous illness: Skin disease. Current condition: Eye infection. Ongoing medication: Antibiotics</li>
+          <li><strong>Spay/Neuter Status:</strong> Scheduled</li>
+          <li><strong>Special Care Needs:</strong> Dietary restrictions (wet food only)</li>
+          <li><strong>Next Scheduled Check-up:</strong> September 20, 2025</li>
+        </ul>
+        <button class="edit-btn" onclick="editMedicalCondition(this)">Edit</button>
+    </div>
+
+  </div>
+      </div>
+
+      <!-- Rehoming Applications -->
+      <div id="rehomingApplications" class="section" style="display:none;">
+        <h2>Rehoming Applications</h2>
+        <div class="search-box">
+          <input type="text" id="rehomingSearch" placeholder="Search Name..." onkeyup="searchRehoming()" />
+        </div>
+
+      <div class="table-responsive">
+        <table id="rehomingTable">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Initial Submission Date</th>
+              <th>Application Notes</th>
+              <th>Approval</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Kent Villanueva</td>
+              <td>April 2, 2025</td>
+              <td>
+                <a href="rehome.html" class="rehome-link">Need more Information</a>
+              </td>   
+              <td>
+                <select class="approval-select" onchange="updateStatus(this)">
+                  <option value="">—</option>
+                  <option value="approved">Approve</option>
+                  <option value="rejected">Reject</option>
+                </select>
+              </td>
+              <td class="status-pending">Pending</td>
+            </tr>
+            <tr>
+              <td>Kiara Salvador</td>
+              <td>March 25, 2025</td>
+              <td>
+                <a href="rehome.html" class="rehome-link">Need more Information</a>
+              </td>
+              <td>
+                <select class="approval-select" onchange="updateStatus(this)">
+                  <option value="">—</option>
+                  <option value="approved" selected>Approve</option>
+                  <option value="rejected">Reject</option>
+                </select>
+              </td>
+              <td class="status-approved">Approved</td> 
+            </tr>
+            <tr>
+              <td>Jiro Santos</td>
+              <td>March 2, 2025</td>
+              <td>
+                <a href="rehome.html" class="rehome-link">Need more Information</a>
+              </td>
+              <td>
+                <select class="approval-select" onchange="updateStatus(this)">
+                  <option value="">—</option>
+                  <option value="approved">Approve</option>
+                  <option value="rejected" selected>Reject</option>
+                </select>
+              </td>
+              <td class="status-rejected">Rejected</td> 
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div id="caketaking" class="section" style="display:none;">
+      <div class="buttons">
+        <button class="nav-button active" data-tab="daily">Daily Caretaking Records</button>
+        <button class="nav-button" data-tab="sustento">Owner Support Logs</button>
+      </div>
+
+      <div class="tab-content" id="daily" style="display: block;">
+        <table>
+          <thead>
+            <tr>
+              <th>Pet ID / Name</th>
+              <th>Caretaker Assigned</th>
+              <th>Feeding Schedule</th>
+              <th>Exercise / Walk Schedule</th>
+              <th>Medical Needs</th>
+              <th>Hygiene</th>
+              <th>Behavior Notes</th>
+              <th>Date Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Ashcole (ID: 002)</td>
+              <td>Juan Dela Cruz</td>
+              <td>8:00 AM - Dry Food</td>
+              <td>2x daily - 7:00 AM, 5:00 PM</td>
+              <td>Vitamin C daily</td>
+              <td>Bath weekly</td>
+              <td>Playful</td>
+              <td>2024-06-01</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tab-content" id="sustento" style="display: none;">
+        <table>
+          <thead>
+            <tr>
+              <th>Pet ID / Name</th>
+              <th>Owner Name / Contact</th>
+              <th>Type of Support</th>
+              <th>Quantity / Amount</th>
+              <th>Date of Support</th>
+              <th>Remarks / Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Ashcole (ID: 002)</td>
+              <td>Maria Santos / 09171234567</td>
+              <td>Food donation (Dry Food)</td>
+              <td>5 kg</td>
+              <td>2024-05-15</td>
+              <td>For 1 month supply</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <script>
+        const buttons = document.querySelectorAll('#caketaking .nav-button');
+        const contents = document.querySelectorAll('#caketaking .tab-content');
+
+        buttons.forEach(button => {
+          button.addEventListener('click', () => {
+            const target = button.getAttribute('data-tab');
+
+            buttons.forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+
+            contents.forEach(c => {
+              if (c.id === target) {
+                c.style.display = 'block';
+              } else {
+                c.style.display = 'none';
+              }
+            });
+          });
+        });
+      </script>
+    </div>
+
+    <!-- Volunteer Approval -->
+    <div id="volunteerApproval" class="section" style="display:none;">
+      <h2>Volunteer Approval</h2>
+      <table id="incomingVolunteers">
+        <thead>
+          <tr>
+            <th>Volunteer</th>
+            <th>Initial submission date</th>
+            <th>Information status</th>
+            <th>Approval to start</th>
+            <th>Approval to start (Date)</th>
+            <th>Contact Information</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Alice Dela Cruz</td>
+            <td>April 9, 2025</td>
+            <td>
+              <a href="volunteer.html" class="volunteer-link">Need more Information</a>
+            </td>
+            <td>
+              <select class="approval-select" onchange="updateVolunteerStatus(this)">
+                <option value="">—</option>
+                <option value="approved">Approve</option>
+                <option value="rejected">Reject</option>
+              </select>
+            </td>
+            <td>Pending</td>
+            <td>alicedelacruz@gmail.com</td>
+          </tr>
+          <tr>
+            <td>Alan Abuena</td>
+            <td>April 9, 2025</td>
+            <td>Complete</td>
+            <td>
+              <select class="approval-select" onchange="updateVolunteerStatus(this)">
+                <option value="pending">Pending</option>
+                <option value="approved" selected>Approved</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </td>
+            <td>April 11, 2025</td>
+            <td>09562475568</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Volunteer Activities -->
+    <div id="volunteerActivities" class="section" style="display:none;">
+      <h2>Activities</h2>
+      <table id="work-to-be-assigned">
+        <thead>
+        <tr>
+          <th>Task</th>
+          <th>Timeline</th>
+          <th>Time slot</th>
+          <th>Volunteer(s) Assigned</th>
+          <th>Work allocation</th> 
+          <th>Status</th>
+          <th>Assigned date</th>
+          <th>Last updated(Date)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Pet Care</td>
+          <td>Dec 2 - Jan 6</td>
+          <td>10 AM - 3 PM</td>
+          <td>Nico Gumbapao</td>
+          <td>
+              <input type="text" id="workAllocationInput1"
+                    placeholder="Enter Work"
+                    value="Pet Care"
+                    onchange="updateWorkAllocation(1)">
+            </td>
+          <td><span class="status-confirmed">Confirmed</span></td>
+           <td>2025-08-10</td>
+          <td>2025-08-12</td>
+        </tr>
+        <tr>
+          <td>Maintenance</td>
+          <td>Jan 8 - Jan 28</td>
+          <td>2 PM - 7 PM</td>
+          <td>Alice Dela Cruz</td>
+          <td>
+            <input type="text" id="workAllocationInput2"
+                  placeholder="Enter Work"
+                  value=""
+                  onchange="updateWorkAllocation(2)">
+          </td>
+          <td><span class="status-working">Working on it</span></td>
+          <td>2025-08-15</td>
+          <td>2025-08-16</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- Performance Evaluation -->
+    <section id="performanceEvaluation" class="section" style="display:none;">
+      <form id="evaluationForm">
+        <label for="volunteerName">Volunteer Name:</label>
+        <select id="volunteerName" name="volunteerName" required>
+          <option value="" disabled selected>Select Volunteer</option>
+          <option value="Juan Dela Cruz">Juan Dela Cruz</option>
+          <option value="Maria Santos">Maria Santos</option>
+          <option value="Pedro Reyes">Pedro Reyes</option>
+        </select>
+
+        <label for="volunteerId">Volunteer ID:</label>
+        <select id="volunteerId" name="volunteerId" required>
+          <option value="" disabled selected>Select ID</option>
+          <option value="V001">V001</option>
+          <option value="V002">V002</option>
+          <option value="V003">V003</option>
+        </select>
+
+        <label for="evaluationDate">Date of Evaluation:</label>
+        <input type="date" id="evaluationDate" name="evaluationDate" required />
+
+        <h3>Criteria Ratings</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Criteria</th>
+              <th colspan="4">Rating (Stars)</th>
+              <th>Notes (Optional)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Punctuality -->
+            <tr>
+              <td>Punctuality</td>
+              <td colspan="4">
+                <div class="star-rating">
+                  <input type="radio" id="punctuality_4" name="punctuality" value="4" required />
+                  <label for="punctuality_4" title="4 stars">&#9733;</label>
+                  <input type="radio" id="punctuality_3" name="punctuality" value="3" />
+                  <label for="punctuality_3" title="3 stars">&#9733;</label>
+                  <input type="radio" id="punctuality_2" name="punctuality" value="2" />
+                  <label for="punctuality_2" title="2 stars">&#9733;</label>
+                  <input type="radio" id="punctuality_1" name="punctuality" value="1" />
+                  <label for="punctuality_1" title="1 star">&#9733;</label>
+                </div>
+              </td>
+              <td><input type="text" name="punctuality_note" placeholder="Optional note..." /></td>
+            </tr>
+
+            <!-- Task Completion -->
+            <tr>
+              <td>Task Completion</td>
+              <td colspan="4">
+                <div class="star-rating">
+                  <input type="radio" id="taskCompletion_4" name="taskCompletion" value="4" required />
+                  <label for="taskCompletion_4" title="4 stars">&#9733;</label>
+                  <input type="radio" id="taskCompletion_3" name="taskCompletion" value="3" />
+                  <label for="taskCompletion_3" title="3 stars">&#9733;</label>
+                  <input type="radio" id="taskCompletion_2" name="taskCompletion" value="2" />
+                  <label for="taskCompletion_2" title="2 stars">&#9733;</label>
+                  <input type="radio" id="taskCompletion_1" name="taskCompletion" value="1" />
+                  <label for="taskCompletion_1" title="1 star">&#9733;</label>
+                </div>
+              </td>
+              <td><input type="text" name="taskCompletion_note" placeholder="Optional note..." /></td>
+            </tr>
+
+            <!-- Communication -->
+            <tr>
+              <td>Communication</td>
+              <td colspan="4">
+                <div class="star-rating">
+                  <input type="radio" id="communication_4" name="communication" value="4" required />
+                  <label for="communication_4" title="4 stars">&#9733;</label>
+                  <input type="radio" id="communication_3" name="communication" value="3" />
+                  <label for="communication_3" title="3 stars">&#9733;</label>
+                  <input type="radio" id="communication_2" name="communication" value="2" />
+                  <label for="communication_2" title="2 stars">&#9733;</label>
+                  <input type="radio" id="communication_1" name="communication" value="1" />
+                  <label for="communication_1" title="1 star">&#9733;</label>
+                </div>
+              </td>
+              <td><input type="text" name="communication_note" placeholder="Optional note..." /></td>
+            </tr>
+
+            <!-- Teamwork -->
+            <tr>
+              <td>Teamwork</td>
+              <td colspan="4">
+                <div class="star-rating">
+                  <input type="radio" id="teamwork_4" name="teamwork" value="4" required />
+                  <label for="teamwork_4" title="4 stars">&#9733;</label>
+                  <input type="radio" id="teamwork_3" name="teamwork" value="3" />
+                  <label for="teamwork_3" title="3 stars">&#9733;</label>
+                  <input type="radio" id="teamwork_2" name="teamwork" value="2" />
+                  <label for="teamwork_2" title="2 stars">&#9733;</label>
+                  <input type="radio" id="teamwork_1" name="teamwork" value="1" />
+                  <label for="teamwork_1" title="1 star">&#9733;</label>
+                </div>
+              </td>
+              <td><input type="text" name="teamwork_note" placeholder="Optional note..." /></td>
+            </tr>
+
+            <!-- Attitude -->
+            <tr>
+              <td>Attitude</td>
+              <td colspan="4">
+                <div class="star-rating">
+                  <input type="radio" id="attitude_4" name="attitude" value="4" required />
+                  <label for="attitude_4" title="4 stars">&#9733;</label>
+                  <input type="radio" id="attitude_3" name="attitude" value="3" />
+                  <label for="attitude_3" title="3 stars">&#9733;</label>
+                  <input type="radio" id="attitude_2" name="attitude" value="2" />
+                  <label for="attitude_2" title="2 stars">&#9733;</label>
+                  <input type="radio" id="attitude_1" name="attitude" value="1" />
+                  <label for="attitude_1" title="1 star">&#9733;</label>
+                </div>
+              </td>
+              <td><input type="text" name="attitude_note" placeholder="Optional note..." /></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <label for="additionalComments">Additional Comments:</label>
+        <textarea id="additionalComments" name="additionalComments" placeholder="Add any further comments here..."></textarea>
+
+        <div class="action-buttons">
+          <button type="button" id="cancel">Cancel</button>
+          <button type="submit" id="submit">Submit</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Evaluation History Section -->
+    <section id="evaluationHistory" class="section" style="display:none;">
+      <h2>Evaluation History</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Volunteer Name</th>
+            <th>Volunteer ID</th>
+            <th>Average Rating</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody id="historyTableBody">
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+    <!-- Evaluation Details Modal -->
+    <div id="evaluationModal">
+      <div class="modal-box">
+        <span id="closeModal" class="close-btn">&times;</span>
+        <h2>Evaluation Details</h2>
+        <div id="modalContent">
+          <!-- Dynamic content goes here -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+    <div id="donationMgmt" class="section" style="display: none; padding: 20px; font-family: Arial, sans-serif;">
+      <h2>Donation Management</h2>
+      <div style="display: flex; margin-top: 30px; gap: 20px; margin-bottom: 20px; flex-wrap: wrap;">
+      <div style="flex: 1; min-width: 220px; background-color: #ffffff; padding: 12px 20px 10px 35px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <p style="color: #868686; margin: 0.1 5px; font-weight: 550;">Total Donation</p>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <h3 style="margin: 0; font-size: 32px; font-weight: 700;">₱50,000</h3>
+          <small style="color: #555; font-size: 14px; margin-top: 12px;">Updated 10m ago</small>
+        </div>
+        <p style="margin-top: 10px; font-weight: 600; color: #317f43;">+₱3,210 than last month</p>
+      </div>
+
+      <div style="flex: 1; min-width: 220px; background-color: #ffffff; padding: 12px 20px 10px 35px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <p style="color: #868686; margin: 0.1 0 5px; font-weight: 550;">Donation This Month</p>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <h3 style="margin: 0; font-size: 32px; font-weight: 700;">₱28,500</h3>
+          <small style="color: #555; font-size: 14px; margin-top: 12px;">Updated 30m ago</small>
+        </div>
+        <p style="margin-top: 10px; font-weight: 600; color: #317f43;">+2.32% than yesterday</p>
+      </div>
+
+      <div style="flex: 1; min-width: 220px; background-color: #ffffff; padding: 12px 20px 10px 35px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <p style="color: #868686; margin: 0.1 0 5px; font-weight: 550;">Total Donors</p>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <h3 style="margin: 0; font-size: 32px; font-weight: 700;">18</h3>
+          <small style="color: #555; font-size: 14px; margin-top: 12px;">Updated 10m ago</small>
+        </div>
+        <p style="margin-top: 10px; font-weight: 600; color: #c0392b;">-1.82% than last month</p>
+      </div>
+
+    </div>
+
+
+    <div style="display: flex; gap: 20px; margin-bottom: 40px; align-items: stretch;">
+      <!-- Analytics Chart -->
+      <div style="flex: 2; min-width: 300px; background-color: #ffffff; padding: 30px 46px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h3 style="margin-bottom: 20px; font-weight: 700;">Donation Analytics</h3>
+        <canvas id="donationChart" height="150"></canvas>
+      </div>
+
+      <!-- Top Donor Box -->
+      <div id="topDonorBox" style="flex: 1; min-width: 250px; background-color: #ffffff; padding: 30px 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 5px;">Top Donor</h3>
+      </div>
+    </div>
+
+    <!-- Search Box -->
+    <div class="search-box" style="margin-bottom: 20px;">
+      <input type="text" id="searchInput" placeholder="Search Name..." onkeyup="searchTable()" style="width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;" />
+    </div>
+
+    <!-- Donation History Title -->
+    <h3 style="margin-bottom: 15px; font-weight: 700;">Donation History</h3>
+
+    <!-- Donation Table -->
+    <table id="donationTable" style="width: 100%; border-collapse: collapse;">
+      <thead style="background-color: #f4f4f4;">
+        <tr>
+          <th style="padding: 12px 15px; text-align: left;">Donor's Name</th>
+          <th style="padding: 12px 15px; text-align: left;">Phone Number</th>
+          <th style="padding: 12px 15px; text-align: left;">Amount</th>
+          <th style="padding: 12px 15px; text-align: left;">Expense</th>
+          <th style="padding: 12px 15px; text-align: left;">Date Given</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid #eee;">
+          <td style="padding: 10px 15px;">Ana Santos</td>
+          <td style="padding: 10px 15px;">09171234567</td>
+          <td style="padding: 10px 15px;">₱5,000</td>
+          <td style="padding: 10px 15px;">Dog Food</td>
+          <td style="padding: 10px 15px;">2025-08-01</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #eee;">
+          <td style="padding: 10px 15px;">Danica Dela Cruz</td>
+          <td style="padding: 10px 15px;">09181234567</td>
+          <td style="padding: 10px 15px;">₱2,000</td>
+          <td style="padding: 10px 15px;">Shelter Support</td>
+          <td style="padding: 10px 15px;">2025-09-10</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #eee;">
+          <td style="padding: 10px 15px;">Liza Reyes</td>
+          <td style="padding: 10px 15px;">09191234567</td>
+          <td style="padding: 10px 15px;">₱1,000</td>
+          <td style="padding: 10px 15px;">Medical Aid</td>
+          <td style="padding: 10px 15px;">2025-09-02</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+    
+
+    <!-- Modals -->
+    <div id="volunteerModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">Convert to Volunteer</div>
+        <p>Are you sure you want to convert this user into a Volunteer?</p>
+        <ul>
+          <li>Clean pet supplies</li>
+          <li>Feed animals</li>
+          <li>Bathe puppies</li>
+        </ul>
+        <div class="modal-actions">
+          <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+          <button class="btn-confirm" onclick="confirmConversion()">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="removeModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">Remove Volunteer Role</div>
+        <p>Are you sure you want to remove this user's Volunteer role?</p>
+        <div class="modal-actions">
+          <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+          <button class="btn-confirm" onclick="confirmRemoval()">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+      <div id="petInfoModal" class="modal">
+        <div class="modal-content">
+        <div class="modal-header">Edit Pet Information</div>
+
+        <label>Pet ID:</label>
+        <input type="text" id="petIdInput" class="form-input"><br><br>
+
+        <label>Pet's Name:</label>
+        <input type="text" id="petNameInput" class="form-input"><br><br>
+
+        <label>Species:</label>
+        <input type="text" id="speciesInput" class="form-input"><br><br>
+
+        <label>Breed:</label>
+        <input type="text" id="breedInput" class="form-input"><br><br>
+
+        <label>Gender:</label>
+        <input type="text" id="genderInput" class="form-input"><br><br>
+
+        <label>Age:</label>
+        <input type="text" id="ageInput" class="form-input"><br><br>
+
+        <label>Current Status:</label>
+        <select id="currentStatusInput" class="form-input">
+          <option value="Available for adopt">Available for adopt</option>
+          <option value="Adopted">Adopted</option>
+          <option value="Deceased">Deceased</option>
+          <option value="Under Treatment">Under Treatment</option>
+          <option value="Under Treatment">Caretaking</option>
+        </select><br><br>
+
+        <label>Rescue Date:</label>
+        <input type="text" id="rescueDateInput" class="form-input"><br><br>
+
+        <label>Location of Rescue:</label>
+        <input type="text" id="locationInput" class="form-input"><br><br>
+
+        <p style="margin-top:10px;font-weight:bold;">Are you sure you want to edit this pet information?</p>
+
+        <div class="modal-actions">
+          <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+          <button class="btn-confirm" onclick="confirmEditPet()">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+      <div id="rescueModal" class="modal">
+        <div class="modal-content">
+        <div class="modal-header">Edit Rescue History</div>
+
+        <label>Pet ID:</label>
+        <input type="text" id="rescuePetId" class="form-input"><br><br>
+
+        <label>Pet's Name:</label>
+        <input type="text" id="rescuePetName" class="form-input"><br><br>
+
+        <label>Rescuer / Reported By:</label>
+        <input type="text" id="rescueRescuer" class="form-input"><br><br>
+
+        <label>Date Encoded:</label>
+        <input type="text" id="rescueDateEncoded" class="form-input"><br><br>
+
+        <label>Species:</label>
+        <input type="text" id="rescueSpecies" class="form-input"><br><br>
+
+        <label>Breed:</label>
+        <input type="text" id="rescueBreed" class="form-input"><br><br>
+
+        <label>Gender:</label>
+        <input type="text" id="rescueGender" class="form-input"><br><br>
+
+        <label>Age:</label>
+        <input type="text" id="rescueAge" class="form-input"><br><br>
+
+        <label>Rescue Date:</label>
+        <input type="text" id="rescueDate" class="form-input"><br><br>
+
+        <label>Location of Rescue:</label>
+        <input type="text" id="rescueLocation" class="form-input"><br><br>
+
+        <p style="margin-top:10px;font-weight:bold;">Are you sure you want to edit this rescue record?</p>
+
+        <div class="modal-actions">
+          <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+          <button class="btn-confirm" onclick="confirmEditRescue()">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    
+
+
+      <!-- Logout -->
+      <div id="logoutModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">Logout Confirmation</div>
+          <p>Are you sure you want to logout?</p>
+          <div class="modal-actions">
+            <!-- use closeLogoutModal instead of closeModal -->
+            <button class="btn-cancel" onclick="closeLogoutModal()">Cancel</button>
+            <button class="btn-confirm" onclick="confirmLogout()">OK</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Medical Condition Edit Modal -->
+      <div id="medicalModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">Edit Medical Condition</div>
+
+          <label>Vaccination Records:</label>
+          <textarea id="vaccinationInput" class="form-input" rows="3"></textarea><br><br>
+
+          <label>Medical History / Notes:</label>
+          <textarea id="notesInput" class="form-input" rows="3"></textarea><br><br>
+
+          <label>Overall Health Status:</label>
+          <select id="healthStatusInput" class="form-input">
+            <option value="Healthy">Healthy</option>
+            <option value="Under Treatment">Under Treatment</option>
+            <option value="Special Needs">Special Needs</option>
+          </select><br><br>
+
+          <label>Spay/Neuter Status:</label>
+          <select id="spayNeuterInput" class="form-input">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            <option value="Scheduled">Scheduled</option>
+          </select><br><br>
+
+          <label>Special Care Needs:</label>
+          <textarea id="careNeedsInput" class="form-input" rows="2"></textarea><br><br>
+
+          <label>Next Scheduled Check-up:</label>
+          <input type="date" id="checkupInput" class="form-input"><br><br>
+
+          <p style="margin-top:10px;font-weight:bold;">Are you sure you want to save the changes?</p>
+
+          <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn-confirm" onclick="confirmEditMedicalCondition()">Save</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Caretaking Edit Modal -->
+      <div id="caretakingModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">Edit Caretaking Task</div>
+          <label>Task:</label>
+          <input type="text" id="caretakingTaskInput" class="form-input"><br><br>
+          <label>Pet:</label>
+          <input type="text" id="caretakingPetInput" class="form-input"><br><br>
+          <label>Assigned To:</label>
+          <input type="text" id="caretakingAssignedInput" class="form-input"><br><br>
+          <label>Status:</label>
+          <select id="caretakingStatusInput" class="form-input">
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+          </select><br><br>
+          <p style="margin-top:10px;font-weight:bold;">Are you sure you want to edit this caretaking task?</p>
+          <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn-confirm" onclick="confirmEditCaretaking()">Confirm</button>
+          </div>
+        </div>
+      </div>
+
+  <script>
+  // Sidebar toggle
+  const sidebar = document.getElementById("sidebar");
+  const mainContent = document.getElementById("mainContent");
+  const sidebarToggle = document.getElementById("sidebarToggle");
+
+  // Show/hide sidebar when button is clicked
+  sidebarToggle.addEventListener("click", () => {
+    sidebar.classList.toggle("collapsed");
+    mainContent.classList.toggle("collapsed");
+  });
+
+  // Navigation between sections
+  const sections = document.querySelectorAll(".section");
+const menuItems = document.querySelectorAll("[data-section]");
+
+menuItems.forEach(item => {
+  item.addEventListener("click", () => {
+    // Hide all sections
+    sections.forEach(sec => sec.style.display = "none");
+
+    // Show the selected section
+    const sectionId = item.getAttribute("data-section");
+    if (sectionId === "performanceEvaluation") {
+      document.getElementById("performanceEvaluation").style.display = "block";
+      document.getElementById("evaluationHistory").style.display = "block";
+    } else {
+      const selectedSection = document.getElementById(sectionId);
+      if (selectedSection) {
+        selectedSection.style.display = "block";
+      }
+    }
+
+    // Update active menu
+    menuItems.forEach(m => m.classList.remove("active"));
+    item.classList.add("active");
+  });
+});
+
+  // Submenu toggle (Animal Management)
+  document.getElementById("animalMgmt").addEventListener("click", () => {
+    const sub = document.getElementById("animalSubmenu");
+    sub.style.display = sub.style.display === "block" ? "none" : "block";
+  });
+
+  // Submenu toggle (Rehoming Management)
+  document.getElementById("rehomingMgmt").addEventListener("click", () => {
+    const sub = document.getElementById("rehomingSubmenu");
+    sub.style.display = sub.style.display === "block" ? "none" : "block";
+  });
+
+  // Logout confirmation
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+  openLogoutModal();  // Show the custom logout confirmation modal
+});
+
+
+    // Search Functions
+    // Search Users
+    function searchUsers() {
+      let input = document.getElementById("userSearchInput").value.toLowerCase();
+      let rows = document.getElementById("userTable").getElementsByTagName("tr");
+      for (let i = 1; i < rows.length; i++) {
+        let td = rows[i].getElementsByTagName("td")[0];
+        rows[i].style.display = td && td.innerText.toLowerCase().includes(input) ? "" : "none";
+      }
+    }
+
+    // Search Pet Information
+    function searchPetInfo() {
+      let input = document.getElementById("petInfoSearch").value.toLowerCase();
+      let rows = document.getElementById("petInfoTable").getElementsByTagName("tr");
+      for (let i = 1; i < rows.length; i++) {
+        let td = rows[i].getElementsByTagName("td")[0];
+        rows[i].style.display = td && td.innerText.toLowerCase().includes(input) ? "" : "none";
+      }
+    }
+
+    // Search Rescue History
+    function searchRescueHistory() {
+      let input = document.getElementById("rescueSearch").value.toLowerCase();
+      let rows = document.getElementById("rescueTable").getElementsByTagName("tr");
+      for (let i = 1; i < rows.length; i++) {
+        let td = rows[i].getElementsByTagName("td")[0];
+        rows[i].style.display = td && td.innerText.toLowerCase().includes(input) ? "" : "none";
+      }
+    }
+
+    // Search Rehoming
+    function searchRehoming() {
+      let input = document.getElementById("rehomingSearch").value.toLowerCase();
+      let rows = document.getElementById("rehomingTable").getElementsByTagName("tr");
+      for (let i = 1; i < rows.length; i++) {
+        let td = rows[i].getElementsByTagName("td")[0];
+        rows[i].style.display = td && td.innerText.toLowerCase().includes(input) ? "" : "none";
+      }
+    }
+
+
+
+    // Search Medical Condition
+    function searchMedicalCondition() {
+      let input = document.querySelector("#medicalCondition input").value.toLowerCase();
+      let cards = document.querySelectorAll(".medical-card");
+      cards.forEach(card => {
+        let text = card.textContent.toLowerCase();
+        card.style.display = text.includes(input) ? "" : "none";
+      });
+    }
+
+    // Volunteer Role & Pet Info Management
+    let currentRow = null;
+
+    // Edit User Role (convert User → Volunteer or revert Volunteer → User)
+    function editUser(button) {
+      currentRow = button.closest("tr");
+      let role = currentRow.cells[2].innerText;
+      if (role === "User") {
+        document.getElementById("volunteerModal").style.display = "block"; // confirm convert
+      } else {
+        document.getElementById("removeModal").style.display = "block"; // confirm remove
+      }
+    }
+
+    // Edit Pet Information
+    function editPet(button) {
+      currentRow = button.closest("tr");
+
+      // Fill modal inputs with current row values
+      document.getElementById("petIdInput").value = currentRow.cells[0].innerText;
+      document.getElementById("petNameInput").value = currentRow.cells[1].innerText;
+      document.getElementById("speciesInput").value = currentRow.cells[2].innerText;
+      document.getElementById("breedInput").value = currentRow.cells[3].innerText;
+      document.getElementById("genderInput").value = currentRow.cells[4].innerText;
+      document.getElementById("ageInput").value = currentRow.cells[5].innerText;
+      document.getElementById("currentStatusInput").value = currentRow.cells[6].innerText;
+      document.getElementById("rescueDateInput").value = currentRow.cells[7].innerText;
+      document.getElementById("locationInput").value = currentRow.cells[8].innerText;
+
+      document.getElementById("petInfoModal").style.display = "block";
+    }
+
+    // Confirm and save edited Pet Info
+    function confirmEditPet() {
+      if (currentRow) {
+        if (confirm("Are you sure you want to save the changes?")) {
+          // Update the table row with new values
+          currentRow.cells[0].innerText = document.getElementById("petIdInput").value;
+          currentRow.cells[1].innerText = document.getElementById("petNameInput").value;
+          currentRow.cells[2].innerText = document.getElementById("speciesInput").value;
+          currentRow.cells[3].innerText = document.getElementById("breedInput").value;
+          currentRow.cells[4].innerText = document.getElementById("genderInput").value;
+          currentRow.cells[5].innerText = document.getElementById("ageInput").value;
+          currentRow.cells[6].innerText = document.getElementById("currentStatusInput").value;
+          currentRow.cells[7].innerText = document.getElementById("rescueDateInput").value;
+          currentRow.cells[8].innerText = document.getElementById("locationInput").value;
+
+          alert("Pet information updated successfully!");
+          closeModal();
+        }
+      }
+    }
+
+    // Close all modals
+    function closeModal() {
+      document.getElementById("volunteerModal").style.display = "none";
+      document.getElementById("removeModal").style.display = "none";
+      document.getElementById("petInfoModal").style.display = "none";
+      document.getElementById("rescueModal").style.display = "none";
+      document.getElementById("caretakingModal").style.display = "none";
+      currentRow = null;
+    }
+
+    // Confirm convert User → Volunteer
+    function confirmConversion() {
+      if (currentRow) currentRow.cells[2].innerText = "Volunteer";
+      closeModal();
+    }
+
+    // Confirm revert Volunteer → User
+    function confirmRemoval() {
+      if (currentRow) currentRow.cells[2].innerText = "User";
+      closeModal();
+    }
+
+  // Close modal when clicking outside it
+    window.onclick = function(event) {
+      if (event.target.classList.contains("modal")) {
+        closeModal();
+      }
+    }
+
+    // Edit Medical Condition
+    function editMedicalCondition(button) {
+      currentRow = button.closest(".medical-card");
+
+      // Get the pet name from the h3
+      const petName = currentRow.querySelector("h3").innerText;
+
+      // Get the list items
+      const listItems = currentRow.querySelectorAll("li");
+
+      // Extract values from the list items
+      const healthStatus = listItems[0].innerText.split(": ")[1];
+      const vaccination = listItems[1].innerText.split(": ")[1];
+      const notes = listItems[2].innerText.split(": ")[1];
+      const spayNeuter = listItems[3].innerText.split(": ")[1];
+      const careNeeds = listItems[4].innerText.split(": ")[1];
+      const checkup = listItems[5].innerText.split(": ")[1];
+
+      // Fill modal inputs
+      document.getElementById("healthStatusInput").value = healthStatus;
+      document.getElementById("vaccinationInput").value = vaccination;
+      document.getElementById("notesInput").value = notes;
+      document.getElementById("spayNeuterInput").value = spayNeuter;
+      document.getElementById("careNeedsInput").value = careNeeds;
+      document.getElementById("checkupInput").value = checkup;
+
+      document.getElementById("medicalModal").style.display = "block";
+    }
+  function editRescue(button) {
+    currentRow = button.closest("tr");
+
+    // pre-fill modal inputs
+    document.getElementById("rescuePetId").value = currentRow.cells[0].innerText;
+    document.getElementById("rescuePetName").value = currentRow.cells[1].innerText;
+    document.getElementById("rescueRescuer").value = currentRow.cells[2].innerText;
+    document.getElementById("rescueDateEncoded").value = currentRow.cells[3].innerText;
+    document.getElementById("rescueSpecies").value = currentRow.cells[4].innerText;
+    document.getElementById("rescueBreed").value = currentRow.cells[5].innerText;
+    document.getElementById("rescueGender").value = currentRow.cells[6].innerText;
+    document.getElementById("rescueAge").value = currentRow.cells[7].innerText;
+    document.getElementById("rescueDate").value = currentRow.cells[8].innerText;
+    document.getElementById("rescueLocation").value = currentRow.cells[9].innerText;
+
+    document.getElementById("rescueModal").style.display = "block";
+  }
+  // Rescue 
+  function confirmEditRescue() {
+    if (currentRow) {
+      currentRow.cells[0].innerText = document.getElementById("rescuePetId").value;
+      currentRow.cells[1].innerText = document.getElementById("rescuePetName").value;
+      currentRow.cells[2].innerText = document.getElementById("rescueRescuer").value;
+      currentRow.cells[3].innerText = document.getElementById("rescueDateEncoded").value;
+      currentRow.cells[4].innerText = document.getElementById("rescueSpecies").value;
+      currentRow.cells[5].innerText = document.getElementById("rescueBreed").value;
+      currentRow.cells[6].innerText = document.getElementById("rescueGender").value;
+      currentRow.cells[7].innerText = document.getElementById("rescueAge").value;
+      currentRow.cells[8].innerText = document.getElementById("rescueDate").value;
+      currentRow.cells[9].innerText = document.getElementById("rescueLocation").value;
+
+      alert("Rescue history updated successfully!");
+      closeModal();
+    }
+  }
+  // Rehoming approval
+  function updateStatus(selectElement) {
+    const currentRow = selectElement.closest("tr");
+    const statusCell = currentRow.cells[4];
+    const selectedValue = selectElement.value;
+    
+    if (selectedValue === "approved") {
+      statusCell.innerText = "Approved";
+      statusCell.className = "status-approved";  
+    } else if (selectedValue === "rejected") {
+      statusCell.innerText = "Rejected";
+      statusCell.className = "status-rejected";  
+    } else {
+      statusCell.innerText = "Pending";
+      statusCell.className = "status-pending"; 
+    }
+  }
+  function showSection(sectionId) {
+    let sections = document.querySelectorAll('.content-section');
+    sections.forEach(sec => sec.style.display = 'none');
+    document.getElementById(sectionId).style.display = 'block';
+  }
+  // volunteer approval
+  function updateVolunteerStatus(selectElement) {
+  const row = selectElement.closest("tr");
+  const dateCell = row.cells[4];
+  const value = selectElement.value;
+
+  if (value === "approved") {
+    // sample: today’s date
+    const today = new Date().toLocaleDateString();
+    dateCell.innerText = today;
+  } else if (value === "rejected") {
+    dateCell.innerText = "Rejected";
+  } else {
+    dateCell.innerText = "Pending";
+  }
+}
+
+  // Volunteer - work allocation
+  function saveWorkAllocation() {
+    const workAllocation1 = document.getElementById("workAllocationInput1").value;
+    const workAllocation2 = document.getElementById("workAllocationInput2").value;
+
+    console.log(workAllocation1);
+    console.log(workAllocation2);
+  }
+  function updateWorkAllocation(id) {
+  const input = document.getElementById("workAllocationInput" + id);
+  const display = document.getElementById("workAllocationDisplay" + id);
+  display.innerText = input.value.trim() || "-";
+}
+
+  window.onload = function() {
+    updateWorkAllocation(1);  
+    updateWorkAllocation(2);  
+  };
+  
+  document.getElementById("volunteerMgmtMain").addEventListener("click", () => {
+    const sub = document.getElementById("volunteerSubmenu");
+    sub.style.display = sub.style.display === "block" ? "none" : "block";
+  });
+  //donation chart
+  const ctx = document.getElementById('donationChart').getContext('2d');
+  const donationChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Sept 1', 'Sept 3', 'Sept 5', 'Sept 7', 'Sept 9', 'Sept 11'],
+      datasets: [{
+        label: 'Donations',
+        data: [1000, 2500, 1500, 3000, 1800, 3200],
+        borderColor: '#cd8c5f',
+        backgroundColor: 'rgba(205, 140, 95, 0.2)',
+        fill: true,
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: value => '₱' + value
+          }
+        }
+      }
+    }
+  });
+    function getTopTwoDonors() {
+  const table = document.getElementById('donationTable').getElementsByTagName('tbody')[0];
+  const rows = table.getElementsByTagName('tr');
+
+  let donors = [];
+
+  for (let i = 0; i < rows.length; i++) {
+    const cells = rows[i].getElementsByTagName('td');
+    const donorName = cells[0].innerText;
+    let amountText = cells[2].innerText;
+    let amount = parseFloat(amountText.replace(/[₱,]/g, ''));
+
+    donors.push({ name: donorName, amount: amount });
+  }
+
+  donors.sort((a, b) => b.amount - a.amount);
+
+  return donors.slice(0, 2);
+}
+
+function updateTopDonor() {
+  const donors = getTopTwoDonors();
+
+  const container = document.getElementById('topDonorBox');
+
+  // Clear previous donor info except the heading
+  container.querySelectorAll('.donor').forEach(el => el.remove());
+
+  donors.forEach(donor => {
+    const donorDiv = document.createElement('div');
+    donorDiv.classList.add('donor');
+    
+    const nameP = document.createElement('p');
+    nameP.classList.add('donor-name');
+    nameP.style.fontWeight = '600';
+    nameP.style.fontSize = '22px';
+
+    nameP.innerText = donor.name;
+    
+    const amountP = document.createElement('p');
+    amountP.classList.add('donor-amount');
+    amountP.style.color = '#317f43';
+    amountP.style.fontSize = '20px';
+    amountP.innerText = `₱${donor.amount.toLocaleString()}`;
+
+    donorDiv.appendChild(nameP);
+    donorDiv.appendChild(amountP);
+
+    container.appendChild(donorDiv);
+  });
+}
+
+  // Call the function after the page loads or when data is ready
+  window.addEventListener('load', () => {
+    updateTopDonor();
+  });
+
+  // open the logout modal
+  function openLogoutModal() {
+    document.getElementById("logoutModal").style.display = "block";
+  }
+
+  // confirm logout 
+  function confirmLogout() {
+      window.location.href = "login.html"; 
+  }
+
+  // close ONLY the logout modal when cancel is clicked
+  function closeLogoutModal() {
+    document.getElementById("logoutModal").style.display = "none";
+  }
+  function searchTable() {
+    const input = document.getElementById("searchInput").value.toLowerCase();
+    const rows = document.querySelectorAll("#donationTable tbody tr");
+
+    rows.forEach(row => {
+      const name = row.cells[0].textContent.toLowerCase();
+      row.style.display = name.includes(input) ? "" : "none";
+    });
+  }
+
+  // Sync volunteer name and ID select fields
+    const volunteerNameSelect = document.getElementById('volunteerName');
+    const volunteerIdSelect = document.getElementById('volunteerId');
+
+    function syncVolunteerFields(changedSelect) {
+      if (changedSelect === volunteerNameSelect) {
+        // Update volunteerId based on volunteerName
+        const selectedName = volunteerNameSelect.value;
+        const idMap = {
+          "Juan Dela Cruz": "V001",
+          "Maria Santos": "V002",
+          "Pedro Reyes": "V003"
+        };
+        volunteerIdSelect.value = idMap[selectedName] || "";
+      } else if (changedSelect === volunteerIdSelect) {
+        // Update volunteerName based on volunteerId
+        const selectedId = volunteerIdSelect.value;
+        const nameMap = {
+          "V001": "Juan Dela Cruz",
+          "V002": "Maria Santos",
+          "V003": "Pedro Reyes"
+        };
+        volunteerNameSelect.value = nameMap[selectedId] || "";
+      }
+    }
+
+    volunteerNameSelect.addEventListener('change', () => syncVolunteerFields(volunteerNameSelect));
+    volunteerIdSelect.addEventListener('change', () => syncVolunteerFields(volunteerIdSelect));
+
+    // Cancel button resets form
+    const cancelBtn = document.getElementById('cancel');
+    const evaluationForm = document.getElementById('evaluationForm');
+    cancelBtn.addEventListener('click', () => {
+      evaluationForm.reset();
+    });
+
+    // Form submit handler - add new entry to Evaluation History
+    evaluationForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Get form values
+      const volunteerName = volunteerNameSelect.value;
+      const volunteerId = volunteerIdSelect.value;
+      const evaluationDate = document.getElementById('evaluationDate').value;
+
+      // Ratings and notes
+      const criteria = ['punctuality', 'taskCompletion', 'communication', 'teamwork', 'attitude'];
+      const ratings = {};
+      const notes = {};
+
+      for (const c of criteria) {
+        const ratingInput = document.querySelector(`input[name="${c}"]:checked`);
+        ratings[c] = ratingInput ? parseInt(ratingInput.value) : 0;
+
+        const noteInput = evaluationForm.querySelector(`input[name="${c}_note"]`);
+        notes[c] = noteInput ? noteInput.value.trim() : "";
+      }
+
+      // Calculate average rating
+      const averageRating = (Object.values(ratings).reduce((a,b) => a + b, 0) / criteria.length).toFixed(2);
+
+      // Additional comments
+      const additionalComments = document.getElementById('additionalComments').value.trim();
+
+      // Add new evaluation to data object
+      evaluationData[nextId] = {
+        name: volunteerName,
+        id: volunteerId,
+        date: evaluationDate,
+        ratings,
+        notes,
+        comments: additionalComments
+      };
+
+      // Add new row to evaluation history table
+      const tbody = document.getElementById('historyTableBody');
+      const newRow = document.createElement('tr');
+
+      newRow.innerHTML = `
+        <td>${evaluationDate}</td>
+        <td>${volunteerName}</td>
+        <td>${volunteerId}</td>
+        <td>${averageRating}</td>
+        <td><button class="view-details-btn" data-id="${nextId}">View</button></td>
+      `;
+
+      tbody.prepend(newRow);
+
+      nextId++;
+
+      evaluationForm.reset();
+  
+      volunteerNameSelect.value = "";
+      volunteerIdSelect.value = "";
+
+      alert('Evaluation submitted and added to history.');
+    });
+const evaluationData = {
+  1: {
+    name: "Juan Dela Cruz",
+    id: "V001",
+    date: "2025-09-10",
+    ratings: {
+      punctuality: 4,
+      taskCompletion: 3,
+      communication: 4,
+      teamwork: 3,
+      attitude: 4
+    },
+    notes: {
+      punctuality: "On time",
+      taskCompletion: "Missed one task",
+      communication: "Good",
+      teamwork: "Decent",
+      attitude: "Positive"
+    },
+    comments: "Overall good"
+  },
+  2: {
+    name: "Maria Santos",
+    id: "V002",
+    date: "2025-09-08",
+    ratings: {
+      punctuality: 4,
+      taskCompletion: 4,
+      communication: 4,
+      teamwork: 4,
+      attitude: 4
+    },
+    notes: {
+      punctuality: "",
+      taskCompletion: "",
+      communication: "",
+      teamwork: "",
+      attitude: ""
+    },
+    comments: "Excellent performance"
+  },
+  3: {
+    name: "Pedro Reyes",
+    id: "V003",
+    date: "2025-09-05",
+    ratings: {
+      punctuality: 3,
+      taskCompletion: 4,
+      communication: 4,
+      teamwork: 3,
+      attitude: 4
+    },
+    notes: {
+      punctuality: "A bit late once",
+      taskCompletion: "Very responsible",
+      communication: "Communicates well",
+      teamwork: "Needs improvement",
+      attitude: "Good"
+    },
+    comments: "Great potential"
+  }
+};
+
+let nextId = 4; // For new entries
+
+// View button click handler
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('view-details-btn')) {
+    const id = e.target.getAttribute('data-id');
+    const data = evaluationData[id];
+
+    if (data) {
+      const modal = document.getElementById('evaluationModal');
+      const modalContent = document.getElementById('modalContent');
+      
+      modalContent.innerHTML = `
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>ID:</strong> ${data.id}</p>
+        <p><strong>Date:</strong> ${data.date}</p>
+        <h4>Ratings:</h4>
+        <ul>
+          <li><strong>Punctuality:</strong> ${data.ratings.punctuality} ⭐ - ${data.notes.punctuality || 'No notes'}</li>
+          <li><strong>Task Completion:</strong> ${data.ratings.taskCompletion} ⭐ - ${data.notes.taskCompletion || 'No notes'}</li>
+          <li><strong>Communication:</strong> ${data.ratings.communication} ⭐ - ${data.notes.communication || 'No notes'}</li>
+          <li><strong>Teamwork:</strong> ${data.ratings.teamwork} ⭐ - ${data.notes.teamwork || 'No notes'}</li>
+          <li><strong>Attitude:</strong> ${data.ratings.attitude} ⭐ - ${data.notes.attitude || 'No notes'}</li>
+        </ul>
+        <p><strong>Additional Comments:</strong> ${data.comments || 'None'}</p>
+      `;
+
+      modal.style.display = 'flex';
+    } else {
+      alert('Evaluation details not found.');
+    }
+  }
+});
+
+document.getElementById('closeModal').addEventListener('click', () => {
+  document.getElementById('evaluationModal').style.display = 'none';
+});
+
+document.getElementById('evaluationModal').addEventListener('click', (e) => {
+  if (e.target.id === 'evaluationModal') {
+    e.target.style.display = 'none';
+  }
+});
+function renderHistory() {
+  const tbody = document.getElementById('historyTableBody');
+  // Clear any existing content in the table body
+  tbody.innerHTML = '';
+
+  // Loop through your data object and create a row for each entry
+  for (const id in evaluationData) {
+    const data = evaluationData[id];
+    // Calculate the average rating from the ratings object
+    const averageRating = (Object.values(data.ratings).reduce((a, b) => a + b, 0) / 5).toFixed(2);
+    
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `
+      <td>${data.date}</td>
+      <td>${data.name}</td>
+      <td>${data.id}</td>
+      <td>${averageRating}</td>
+      <td><button class="view-details-btn" data-id="${id}">View</button></td>
+    `;
+    
+    // Add the new row to the table body
+    tbody.prepend(newRow); 
+  }
+}
+// At the end of your script, call the function
+renderHistory();
+
+  // Search Caretaking
+  function searchCaretaking() {
+    let input = document.getElementById("caretakingSearch").value.toLowerCase();
+    let rows = document.getElementById("caretakingTable").getElementsByTagName("tr");
+    for (let i = 1; i < rows.length; i++) {
+      let td = rows[i].getElementsByTagName("td")[0];
+      rows[i].style.display = td && td.innerText.toLowerCase().includes(input) ? "" : "none";
+    }
+  }
+
+  // Edit Caretaking
+  function editCaretaking(button) {
+    currentRow = button.closest("tr");
+    document.getElementById("caretakingTaskInput").value = currentRow.cells[0].innerText;
+    document.getElementById("caretakingPetInput").value = currentRow.cells[1].innerText;
+    document.getElementById("caretakingAssignedInput").value = currentRow.cells[2].innerText;
+    document.getElementById("caretakingStatusInput").value = currentRow.cells[3].innerText;
+    document.getElementById("caretakingModal").style.display = "block";
+  }
+
+  // Confirm and save edited Caretaking
+  function confirmEditCaretaking() {
+    if (currentRow) {
+      currentRow.cells[0].innerText = document.getElementById("caretakingTaskInput").value;
+      currentRow.cells[1].innerText = document.getElementById("caretakingPetInput").value;
+      currentRow.cells[2].innerText = document.getElementById("caretakingAssignedInput").value;
+      currentRow.cells[3].innerText = document.getElementById("caretakingStatusInput").value;
+      alert("Caretaking task updated successfully!");
+      closeModal();
+    }
+  }
+  </script>
+  </body>
+  </html>

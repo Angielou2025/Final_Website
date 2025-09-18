@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GCash Payment</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f0eb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      display: flex;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+      overflow: hidden;
+      max-width: 700px;
+      width: 90%;
+    }
+    .qrcode {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f8f8f8;
+      padding: 20px;
+    }
+    .qrcode img {
+      max-width: 250px;
+      height: auto;
+    }
+    .details {
+      flex: 1;
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .details h2 {
+      margin: 0 0 10px 0;
+      font-size: 22px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 8px;
+    }
+    .details p {
+      font-size: 14px;
+      margin: 8px 0;
+    }
+    .button {
+      display: inline-block;
+      margin-top: 15px;
+      background: #cd8c5f;
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+    }
+    .button:hover {
+      background: #a96e47;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Left: QR Code -->
+    <div class="qrcode">
+      <img src="../img/qrcode.png" alt="GCash QR Code">
+    </div>
+
+    <!-- Right: Details -->
+    <div class="details">
+      <h2>GCASH</h2>
+      <h3></h3>
+      <p><b>GCash Number:</b> 09932584599</p>
+      <p>Hi <b><?= htmlspecialchars($donation['first_name']) ?></b>, please send ₱<?= htmlspecialchars($donation['amount']) ?> using the QR code.</p>
+      <p>After donating, kindly take a screenshot and send it to us via email/message for confirmation.</p>
+      <a class="button" href="receipt.php?id=<?= $donation_id ?>">I've Paid - See Receipt</a>
+    </div>
+  </div>
+</body>
+</html>
